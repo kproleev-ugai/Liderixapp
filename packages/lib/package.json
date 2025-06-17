@@ -1,0 +1,12 @@
+{
+  "name": "@liderix/lib",
+  "version": "0.1.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@liderix/prisma": "workspace:*",
+    "next-auth": "^4.24.0",
+    "zustand": "^4.4.0",
+    "zod": "^3.22.0"
+  }
+}

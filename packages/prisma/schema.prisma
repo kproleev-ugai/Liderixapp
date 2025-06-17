@@ -1,0 +1,194 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["core", "config", "billing", "auth"]
+}
+
+// Core Schema - Company and User management
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  domain    String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users         User[]
+  config        Config?
+  subscription  Subscription?
+
+  @@schema("core")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      UserRole @default(USER)
+  companyId String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  // NextAuth relations
+  accounts Account[]
+  sessions Session[]
+
+  @@schema("core")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  USER
+
+  @@schema("core")
+}
+
+// Config Schema - App settings and modules
+model Config {
+  id          String     @id @default(cuid())
+  companyId   String     @unique
+  modules     AppModule[]
+  theme       String     @default("light")
+  aiEnabled   Boolean    @default(false)
+  customLogo  String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@schema("config")
+}
+
+enum AppModule {
+  DASHBOARD
+  OKR
+  TASKS
+  ANALYTICS
+  AI
+  CRM
+  HR
+
+  @@schema("config")
+}
+
+model AppSettings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  companyId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("config")
+}
+
+// Billing Schema - Subscriptions and usage
+model Subscription {
+  id           String           @id @default(cuid())
+  companyId    String           @unique
+  plan         SubscriptionPlan @default(STARTER)
+  status       String           @default("active")
+  tokenLimit   Int              @default(1000)
+  storageLimit Int              @default(1000) // MB
+  usersLimit   Int              @default(5)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  usage   Usage[]
+
+  @@schema("billing")
+}
+
+enum SubscriptionPlan {
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+
+  @@schema("billing")
+}
+
+model Usage {
+  id             String   @id @default(cuid())
+  subscriptionId String
+  type           String   // tokens, storage, api_calls
+  amount         Int
+  date           DateTime @default(now())
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@schema("billing")
+}
+
+// Auth Schema - NextAuth tables
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@schema("auth")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("auth")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@schema("auth")
+}
+
+// Integration models
+model Integration {
+  id        String            @id @default(cuid())
+  companyId String
+  type      IntegrationType
+  name      String
+  config    Json
+  isActive  Boolean           @default(true)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@schema("config")
+}
+
+enum IntegrationType {
+  CRM
+  ANALYTICS
+  DATABASE
+  SOCIAL_MEDIA
+
+  @@schema("config")
+}

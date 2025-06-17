@@ -1,0 +1,17 @@
+export * from "./components/metric-card"
+export * from "./components/insight-card"
+export * from "./components/chart-box"
+export * from "./components/progress-bar"
+export * from "./components/drawer-form"
+export * from "./components/user-avatar"
+export * from "./components/kanban-column"
+export * from "./components/okr-tree"
+export * from "./components/sidebar"
+export * from "./components/topbar"
+
+// Новые компоненты
+export * from "./components/chart-block"
+export * from "./components/insights-panel"
+export * from "./components/comparison-table"
+export * from "./components/objective-card"
+export * from "./components/kpi-block"
