@@ -11,9 +11,9 @@
   "dependencies": {
     "@auth/core": "latest",
     "@hookform/resolvers": "^3.9.1",
-    "@liderix/lib": "latest",
-    "@liderix/prisma": "latest",
-    "@liderix/ui-kit": "latest",
+    "@liderix/lib": "workspace:*",
+    "prisma": "latest",
+    "@liderix/ui-kit": "workspace:*",
     "@next-auth/prisma-adapter": "latest",
     "@prisma/client": "latest",
     "@radix-ui/react-accordion": "1.2.2",

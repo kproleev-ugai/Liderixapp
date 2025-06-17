@@ -4,7 +4,7 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "dependencies": {
-    "@liderix/prisma": "workspace:*",
+    "@prisma/client": "latest",
     "next-auth": "^4.24.0",
     "zustand": "^4.4.0",
     "zod": "^3.22.0"
