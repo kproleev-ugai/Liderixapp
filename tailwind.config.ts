@@ -3,11 +3,13 @@ import type { Config } from "tailwindcss"
 const config: Config = {
   darkMode: ["class"],
   content: [
-    "./apps/*/src/**/*.{js,ts,jsx,tsx,mdx}",
-    "./packages/ui-kit/src/**/*.{js,ts,jsx,tsx,mdx}",
-    "*.{js,ts,jsx,tsx,mdx}",
-    "app/**/*.{ts,tsx}",
-    "components/**/*.{ts,tsx}",
+    "./apps/**/*.{js,ts,jsx,tsx,mdx}",              // Все приложения
+    "./packages/ui-kit/src/**/*.{js,ts,jsx,tsx,mdx}",// Все компоненты UI-кита
+    "./packages/lib/**/*.{js,ts,jsx,tsx,mdx}",       // Утилиты и сторы
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",                // Для App Router (если используется)
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",         // Глобальные компоненты (если есть)
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",              // Для классического роутинга
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",                // fallback для всех
   ],
   theme: {
     extend: {

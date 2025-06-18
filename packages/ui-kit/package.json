@@ -1,12 +1,19 @@
 {
   "name": "@liderix/ui-kit",
   "version": "0.1.0",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "@liderix/lib": "workspace:*",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
     "lucide-react": "^0.290.0",
     "recharts": "^2.8.0",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -18,8 +25,13 @@
     "clsx": "^2.0.0",
     "tailwind-merge": "^2.0.0"
   },
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
+  },
   "devDependencies": {
     "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0"
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
   }
 }
